@@ -3,3 +3,6 @@
 ################################################################################
 
 /.vs
+/DockerAPI/DockerAPI/obj
+/DockerAPI/DockerAPI/bin/Debug/net5.0
+/DockerAPI/.vs/DockerAPI
