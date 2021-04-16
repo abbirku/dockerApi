@@ -10,3 +10,7 @@
 /DockerAPI/DockerAPI/Logs
 /DockerAPI/Docker.Core/bin/Debug/netcoreapp3.1
 /DockerAPI/Docker.Core/obj
+/DockerAPI/.vs/Docker.API
+/DockerAPI/Docker.API/bin/Debug
+/DockerAPI/Docker.API/obj
+/DockerAPI/Docker.API/Logs

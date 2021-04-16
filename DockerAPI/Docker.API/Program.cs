@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DockerAPI
+namespace Docker.Api
 {
     /// <summary>
     /// Note: While using serilog use either appsettings.json or code config. 
