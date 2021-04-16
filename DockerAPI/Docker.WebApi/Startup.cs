@@ -4,15 +4,12 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Docker.Infrastructure;
 using Docker.Infrastructure.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 
 namespace DevTrack.WebApi
 {
@@ -38,7 +35,7 @@ namespace DevTrack.WebApi
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            var connectionStringName = "DefaultConnection";
+            var connectionStringName = "DockerApiDb";
             var connectionString = Configuration.GetConnectionString(connectionStringName);
             var migrationAssemblyName = typeof(Startup).Assembly.FullName;
 
@@ -48,27 +45,12 @@ namespace DevTrack.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionStringName = "DefaultConnection";
+            var connectionStringName = "DockerApiDb";
             var connectionString = Configuration.GetConnectionString(connectionStringName);
             var migrationAssemblyName = typeof(Startup).Assembly.FullName;
 
             services.AddDbContext<ApiContext>(options =>
                        options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName)));
-
-            services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Audience"]
-                    };
-                });
 
             services.AddCors();
             services.AddMvc();
@@ -93,9 +75,6 @@ namespace DevTrack.WebApi
                .AllowAnyHeader());
 
             app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

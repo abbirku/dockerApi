@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,7 +15,6 @@ namespace DevTrack.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = "CommonPolicy")]
     public class WebCamImageController : ControllerBase
     {
         private readonly ILogger<WebCamImageController> _logger;
@@ -22,7 +22,7 @@ namespace DevTrack.WebApi.Controllers
         private readonly IWebHostEnvironment _env;
 
         public WebCamImageController(IWebCamImageCaptureService webCamImageCaptureService,
-            ILogger<WebCamImageController> logger, 
+            ILogger<WebCamImageController> logger,
             IWebHostEnvironment env)
         {
             _webCamImageCaptureService = webCamImageCaptureService;
@@ -46,7 +46,7 @@ namespace DevTrack.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.StackTrace);
+                _logger.LogError(ex.Message);
 
                 var result = new ResultModel<IEnumerable<WebCamImageQueryDTO>>
                 {
@@ -75,7 +75,7 @@ namespace DevTrack.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.StackTrace);
+                _logger.LogError(ex.Message);
 
                 var result = new ResultModel<WebCamImageQueryDTO>
                 {
@@ -97,8 +97,8 @@ namespace DevTrack.WebApi.Controllers
 
                 var result = new ResultModel<WebCamImageQueryDTO>
                 {
-                    Data = new WebCamImageQueryDTO(),
-                    Message = string.Empty,
+                    Data = null,
+                    Message = "Insert successful",
                     Success = true
                 };
 
@@ -106,7 +106,7 @@ namespace DevTrack.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.StackTrace);
+                _logger.LogError(ex.Message);
 
                 var result = new ResultModel<WebCamImageQueryDTO>
                 {
@@ -142,7 +142,7 @@ namespace DevTrack.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.StackTrace);
+                _logger.LogError(ex.Message);
 
                 var result = new ResultModel<WebCamImageQueryDTO>
                 {
