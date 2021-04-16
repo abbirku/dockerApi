@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DockerAPI.Model;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,37 @@ namespace DockerAPI.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("GuessMe/{num}")]
+        public ResultModel<int> Get(int num)
+        {
+            try
+            {
+                if (num <= 0)
+                    throw new Exception("Provide number greater then zero");
+
+                var rng = new Random();
+                var result = rng.Next(num);
+
+                return new ResultModel<int>
+                {
+                    Data = result,
+                    Success = true,
+                    Message = "Surprice"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new ResultModel<int>
+                {
+                    Data = 0,
+                    Success = false,
+                    Message = ex.GetBaseException().Message
+                };
+            }
+
         }
     }
 }
