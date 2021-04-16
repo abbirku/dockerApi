@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docker.Api", "Docker.API\Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack.Core", "Docker.Core\DevTrack.Core.csproj", "{02EA877C-A216-458E-BCA2-E6526C065B42}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack.Infrastructure", "Docker.Infrastructure\DevTrack.Infrastructure.csproj", "{EA8FCFAB-03A8-4B46-A287-18009FCA166F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{02EA877C-A216-458E-BCA2-E6526C065B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02EA877C-A216-458E-BCA2-E6526C065B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02EA877C-A216-458E-BCA2-E6526C065B42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA8FCFAB-03A8-4B46-A287-18009FCA166F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA8FCFAB-03A8-4B46-A287-18009FCA166F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA8FCFAB-03A8-4B46-A287-18009FCA166F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA8FCFAB-03A8-4B46-A287-18009FCA166F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

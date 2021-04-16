@@ -14,3 +14,5 @@
 /DockerAPI/Docker.API/bin/Debug
 /DockerAPI/Docker.API/obj
 /DockerAPI/Docker.API/Logs
+/DockerAPI/Docker.Infrastructure/bin/Debug/netcoreapp3.1
+/DockerAPI/Docker.Infrastructure/obj
