@@ -16,3 +16,8 @@
 /DockerAPI/Docker.API/Logs
 /DockerAPI/Docker.Infrastructure/bin/Debug/netcoreapp3.1
 /DockerAPI/Docker.Infrastructure/obj
+/DockerAPI/Docker.WebApi/bin/Debug/netcoreapp3.1
+/DockerAPI/Docker.WebApi/Logs
+/DockerAPI/Docker.WebApi/obj
+/DockerAPI/Docker.WebApi/wwwroot/Images/WebCamImages
+/DockerAPI/Docker.WebApi/wwwroot/Images/CaptureScreen
