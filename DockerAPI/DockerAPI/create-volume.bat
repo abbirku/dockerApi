@@ -1,1 +1,1 @@
-docker volume create --driver local --opt type=none --opt device=D:\Logs --opt o=bind apivolume-data
+docker volume create --driver local --opt type=none --opt device=E:\Logs --opt o=bind apivolume-data
