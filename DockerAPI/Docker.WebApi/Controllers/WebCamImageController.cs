@@ -46,12 +46,12 @@ namespace Docker.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                //_logger.LogError(ex.Message);
 
                 var result = new ResultModel<IEnumerable<WebCamImageQueryDTO>>
                 {
                     Data = new List<WebCamImageQueryDTO>(),
-                    Message = "Error Occurred",
+                    Message = ex.Message,
                     Success = false
                 };
 
