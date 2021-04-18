@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DevTrack.WebApi.Migrations
+namespace Docker.WebApi.Migrations
 {
     [DbContext(typeof(ApiContext))]
     [Migration("20210416215320_InitialMigration")]

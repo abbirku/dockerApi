@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Docker.Core\DevTrack.Core.csproj" />
+    <ProjectReference Include="..\Docker.Core\Docker.Core.csproj" />
   </ItemGroup>
 
 </Project>

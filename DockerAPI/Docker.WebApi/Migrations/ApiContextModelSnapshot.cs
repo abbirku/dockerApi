@@ -4,9 +4,8 @@ using Docker.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DevTrack.WebApi.Migrations
+namespace Docker.WebApi.Migrations
 {
     [DbContext(typeof(ApiContext))]
     partial class ApiContextModelSnapshot : ModelSnapshot

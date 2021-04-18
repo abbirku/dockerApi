@@ -56,7 +56,7 @@
     <Folder Include="Logs\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Docker.Core\DevTrack.Core.csproj" />
-    <ProjectReference Include="..\Docker.Infrastructure\DevTrack.Infrastructure.csproj" />
+    <ProjectReference Include="..\Docker.Core\Docker.Core.csproj" />
+    <ProjectReference Include="..\Docker.Infrastructure\Docker.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

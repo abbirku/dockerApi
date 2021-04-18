@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DevTrack.WebApi.Migrations
+namespace Docker.WebApi.Migrations
 {
     public partial class InitialMigration : Migration
     {
