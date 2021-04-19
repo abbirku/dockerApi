@@ -38,6 +38,14 @@ docker run -it -p 8000:80 {imagename}
 2. run the following command from context to bind the created volume and image
    "docker run -it -p 8000:80 -v {volume name}:/app/Logs {image name}"
 	
+## Docker compose
+1. To run docker compose use the following command: docker-compose up -d
+2. To stop run the following command: docker-compose stop
+
+### Note:
+1. By running docker compose you don't need to create image, run the image and run the volume according to docker-compose.yml file.
+2. To work with volume in docker compose first create the volume manually and then use it docker-compose.yml file.
+	
 ### Other useful commands
 1. docker ps -> show the list of containers
 2. docker images -> show the list of docker images
