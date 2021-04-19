@@ -18,7 +18,7 @@ docker run -it -p 8000:80 <imagename>
 3. Here, 8000 is available port number. If the port number is locked then open it by firewall.
 4. To browse go to browser and visit the following URL: http://localhost:8000/
 
-## Connect SQL Server with Docker
+## Connect Local SQL Server instance with Docker
 1. Open SQL Server Configuration Manager in administrator mode. Go to "C:\Windows\SysWOW64 location" and run "SQLServerManager15.msc" as administrator mode.
 2. Open "Protocols for SQLEXPRESS" under "SQL Server Network Configuration"
 3. Check TCP/IP is enable.
