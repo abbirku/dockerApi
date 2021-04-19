@@ -2,7 +2,7 @@
 This is a boiler plate sample of docker for ASP.Net Core API
 
 ## To build docker image run the following command:
-docker build -t <imagename> -f <folder>/Dockerfile .
+docker build -t {imagename} -f {folder}/Dockerfile .
 
 ### Note: 
 1. Must run this command from docker context
@@ -10,7 +10,7 @@ docker build -t <imagename> -f <folder>/Dockerfile .
 3. folder: Provide folder information under which Dockerfile exists.
 
 ## To run docker image execute the following command:
-docker run -it -p 8000:80 <imagename>
+docker run -it -p 8000:80 {imagename}
 
 ### Note:
 1. This will run the image on four ground. Press CTRL + C to running.
@@ -36,12 +36,12 @@ docker run -it -p 8000:80 <imagename>
 1. Create a Create-volume.bat file and in it put the following command 
    "docker volume create --driver local --opt type=none --opt device=<Physical location of the file> --opt o=bind <volume name>"
 2. run the following command from context to bind the created volume and image
-   "docker run -it -p 8000:80 -v <volume name>:/app/Logs <image name>"
+   "docker run -it -p 8000:80 -v {volume name}:/app/Logs {image name}"
 	
 ### Other useful commands
 1. docker ps -> show the list of containers
 2. docker images -> show the list of docker images
 3. docker volume ls -> show the list of volumes
-4. docker volume rm <volume name> -> To delete a specific volume
+4. docker volume rm {volume name} -> To delete a specific volume
 	
 	
