@@ -11,7 +11,7 @@ using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace DevTrack.WebApi.Controllers
+namespace Docker.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -46,12 +46,12 @@ namespace DevTrack.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                //_logger.LogError(ex.Message);
 
                 var result = new ResultModel<IEnumerable<WebCamImageQueryDTO>>
                 {
                     Data = new List<WebCamImageQueryDTO>(),
-                    Message = "Error Occurred",
+                    Message = ex.Message,
                     Success = false
                 };
 

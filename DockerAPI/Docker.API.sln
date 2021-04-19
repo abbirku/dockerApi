@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack.Core", "Docker.Core\DevTrack.Core.csproj", "{02EA877C-A216-458E-BCA2-E6526C065B42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docker.Core", "Docker.Core\Docker.Core.csproj", "{02EA877C-A216-458E-BCA2-E6526C065B42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack.Infrastructure", "Docker.Infrastructure\DevTrack.Infrastructure.csproj", "{EA8FCFAB-03A8-4B46-A287-18009FCA166F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docker.Infrastructure", "Docker.Infrastructure\Docker.Infrastructure.csproj", "{EA8FCFAB-03A8-4B46-A287-18009FCA166F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack.WebApi", "Docker.WebApi\DevTrack.WebApi.csproj", "{859FB0E6-F143-489D-92C2-2B32CB1F35DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docker.WebApi", "Docker.WebApi\Docker.WebApi.csproj", "{859FB0E6-F143-489D-92C2-2B32CB1F35DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

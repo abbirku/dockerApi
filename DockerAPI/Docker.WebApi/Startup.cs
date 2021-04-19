@@ -1,5 +1,3 @@
-using System;
-using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Docker.Infrastructure;
@@ -11,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DevTrack.WebApi
+namespace Docker.WebApi
 {
     public class Startup
     {

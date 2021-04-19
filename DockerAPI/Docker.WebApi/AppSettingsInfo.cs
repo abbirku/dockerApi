@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace DevTrack.WebApi
+namespace Docker.WebApi
 {
     public static class AppSettingsInfo
     {
