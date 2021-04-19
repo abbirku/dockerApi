@@ -1,0 +1,13 @@
+version: "3"
+services:
+    web:
+        build: 
+            context: ./
+            dockerfile: Docker.WebApi/Dockerfile
+        volumes:
+            - docker-apivolume-data:/app/Logs
+        ports:
+            - "8000:80"
+volumes:
+     docker-apivolume-data: 
+        external: true
