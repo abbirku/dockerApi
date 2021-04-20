@@ -34,7 +34,7 @@ docker run -it -p 8000:80 {imagename}
 	
 ## Create docker volume and mapped it with image
 1. Create a Create-volume.bat file and in it put the following command 
-   "docker volume create --driver local --opt type=none --opt device=<Physical location of the file> --opt o=bind <volume name>"
+   "docker volume create --driver local --opt type=none --opt device={Physical location of the file} --opt o=bind {volume name}"
 2. run the following command from context to bind the created volume and image
    "docker run -it -p 8000:80 -v {volume name}:/app/Logs {image name}"
 	
