@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Docker.Infrastructure;
 using Docker.Infrastructure.Context;
+using Docker.Infrastructure.SettingsModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,10 @@ namespace Docker.WebApi
             var connectionStringName = "DockerApiDb";
             var connectionString = Configuration.GetConnectionString(connectionStringName);
             var migrationAssemblyName = typeof(Startup).Assembly.FullName;
+
+            //Binding appsettings.json EmailSettings properties with EmailSettings class
+            services.AddSingleton(Configuration.GetSection("EmailSettings")
+                .Get<EmailSettings>(options => options.BindNonPublicProperties = true));
 
             services.AddDbContext<ApiContext>(options =>
                        options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName)));
