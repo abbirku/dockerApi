@@ -15,6 +15,7 @@ Set the following keys in windows 10 environment variables with sutable values
 **Notes:**
 1. After settings the environment variables restart the project to get the latest values.
 2. We have used EmailSettings class to bind with the EmailSettings section in appsettings.json.
+3. Here, tableName of Serilog should be the table that we have created in database.
 
 ## To build docker image run the following command:
 docker build -t {imagename} -f {folder}/Dockerfile .
