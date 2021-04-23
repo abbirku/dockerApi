@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,10 +13,10 @@ namespace Docker.WebApi
     {
         public static void Main(string[] args)
         {
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
-            var configBuilder = builder.Build();
+            var configBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", false)
+                .AddEnvironmentVariables()
+                .Build();
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
