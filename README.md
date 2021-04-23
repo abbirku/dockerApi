@@ -4,7 +4,7 @@ This is a ASP.Net Core WebApi boiler plate
 ## Environment Variables
 Set the following keys in windows 10 environment variables with sutable values
 
-1. ConnectionStrings:DockerApiD
+1. ConnectionStrings:DockerApiDb
 2. Serilog:WriteTo:1:Args:connectionString
 3. Serilog:WriteTo:1:Args:tableName
 4. EmailSettings:SMTPEmail
