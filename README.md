@@ -1,5 +1,20 @@
 # dockerApi
-This is a boiler plate sample of docker for ASP.Net Core API
+This is a ASP.Net Core WebApi boiler plate
+
+## Environment Variables
+Set the following keys in windows 10 environment variables
+
+1. ConnectionStrings:DockerApiD
+2. Serilog:WriteTo:1:Args:connectionString
+3. Serilog:WriteTo:1:Args:tableName
+4. EmailSettings:SMTPEmail
+5. EmailSettings:SMTPPassword
+6. EmailSettings:SMTPPort
+7. EmailSettings:SMTPHostname
+
+**Notes:**
+1. After settings the environment variables restart the project to get the latest values.
+2. We have used EmailSettings class to bind with the EmailSettings section in appsettings.json.
 
 ## To build docker image run the following command:
 docker build -t {imagename} -f {folder}/Dockerfile .
@@ -29,7 +44,7 @@ docker run -it -p 8000:80 {imagename}
 8. Setup inbound rule on FireWall for TCP port 49172 which we setup in SQL Server Configuration Manager.
 9. To check the port is available or not, run the command "netstat /a /n /o >d:\netstat.txt" in cmd and check the port number in the text file. If not then configure.
 10. Get IP address of your PC by running the command "ipconfig" and note down suitable IPv4 Address.
-11. Proper connection string patter: "Server=172.27.48.1,49172\\SQLEXPRESS;Initial Catalog=DockerApi;User ID=wadud;Password=abcd1234;". Provide wadud user DB access of DockerApi from
+11. Proper connection string patter: "Server={IP_Address},49172\\SQLEXPRESS;Initial Catalog=DockerApi;User ID=wadud;Password=abcd1234;". Provide wadud user DB access of DockerApi from
     sa user under security.
 	
 ## Create docker volume and mapped it with image
