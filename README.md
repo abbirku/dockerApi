@@ -19,7 +19,7 @@ Set the following keys in windows 10 environment variables
 ## To build docker image run the following command:
 docker build -t {imagename} -f {folder}/Dockerfile .
 
-### Note: 
+**Notes:**
 1. Must run this command from docker context
 2. imagename: Provide image name all small letter
 3. folder: Provide folder information under which Dockerfile exists.
@@ -27,7 +27,7 @@ docker build -t {imagename} -f {folder}/Dockerfile .
 ## To run docker image execute the following command:
 docker run -it -p 8000:80 {imagename}
 
-### Note:
+**Notes:**
 1. This will run the image on four ground. Press CTRL + C to running.
 2. To run the image on back ground execute the following: docker run -d -p 8000:80 <imagename>
 3. Here, 8000 is available port number. If the port number is locked then open it by firewall.
@@ -57,11 +57,11 @@ docker run -it -p 8000:80 {imagename}
 1. To run docker compose use the following command: docker-compose up -d
 2. To stop run the following command: docker-compose stop
 
-### Note:
+**Notes:**
 1. By running docker compose you don't need to create image, run the image and run the volume according to docker-compose.yml file.
 2. To work with volume in docker compose first create the volume manually and then use it docker-compose.yml file.
 	
-### Other useful commands
+**Other useful commands**
 1. docker ps -> show the list of containers
 2. docker images -> show the list of docker images
 3. docker volume ls -> show the list of volumes
