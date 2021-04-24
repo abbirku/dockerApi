@@ -17,6 +17,12 @@ Set the following keys in windows 10 environment variables with sutable values
 2. We have used EmailSettings class to bind with the EmailSettings section in appsettings.json.
 3. Here, tableName of Serilog should be the table that we have created in database.
 
+## Migration & Data Seeding
+1. For each context under a module create a seed class and inherit from DataSeed.
+2. Bind it to module as self.
+3. In StartUp.cs in Configure method inject that seed class.
+4. At the end of Configure method do MigrateAsync.
+
 ## To build docker image run the following command:
 docker build -t {imagename} -f {folder}/Dockerfile .
 
