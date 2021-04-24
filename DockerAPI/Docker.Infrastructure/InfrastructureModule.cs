@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Docker.Infrastructure.Context;
 using Docker.Infrastructure.Repositories;
+using Docker.Infrastructure.Seed;
 using Docker.Infrastructure.Services;
 using Docker.Infrastructure.UnitOfWorks;
 
@@ -37,6 +38,10 @@ namespace Docker.Infrastructure
                 .InstancePerLifetimeScope();
 
             //Registering Adapters
+
+            //Register seeds
+            builder.RegisterType<WebCamSeed>().AsSelf()
+                .InstancePerLifetimeScope();
 
             base.Load(builder);
         }

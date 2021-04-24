@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Docker.Infrastructure;
 using Docker.Infrastructure.Context;
+using Docker.Infrastructure.Seed;
 using Docker.Infrastructure.SettingsModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,7 +64,7 @@ namespace Docker.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebCamSeed webCamSeed)
         {
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
@@ -85,6 +86,8 @@ namespace Docker.WebApi
             {
                 endpoints.MapControllers();
             });
+
+            webCamSeed.MigrateAsync().Wait();
         }
     }
 }
