@@ -15,7 +15,7 @@ namespace Docker.Infrastructure.Repositories
             : base(dbContext)
         {}
 
-        public void SyncLocalWebCamImageData(string rootPath, WebCamImageInsertDTO imageData)
+        public void SyncLocalWebCamImageData(WebCamImageInsertDTO imageData)
         {
             if (imageData.Image == null)
                 throw new ArgumentNullException("Provided image is null");

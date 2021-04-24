@@ -8,6 +8,6 @@ namespace Docker.Infrastructure.Repositories
 {
     public interface IWebCamImageRepository : IRepository<WebCamImage, Guid, ApiContext>
     {
-        void SyncLocalWebCamImageData(string rootPath, WebCamImageInsertDTO imageData);
+        void SyncLocalWebCamImageData(WebCamImageInsertDTO imageData);
     }
 }

@@ -9,7 +9,7 @@ namespace Docker.Infrastructure.Services
     {
         IEnumerable<WebCamImageQueryDTO> GetWebCamImages();
         WebCamImageQueryDTO GetWebCamImage(Guid id);
-        bool SyncLocalWebCamImageData(string rootPath, WebCamImageInsertDTO imageData);
+        bool SyncLocalWebCamImageData(WebCamImageInsertDTO imageData);
         bool DeleteWebCamImageRecord(Guid id);
     }
 }
