@@ -19,15 +19,12 @@ namespace Docker.WebApi.Controllers
     {
         private readonly ILogger<WebCamImageController> _logger;
         private readonly IWebCamImageCaptureService _webCamImageCaptureService;
-        private readonly IWebHostEnvironment _env;
 
         public WebCamImageController(IWebCamImageCaptureService webCamImageCaptureService,
-            ILogger<WebCamImageController> logger,
-            IWebHostEnvironment env)
+            ILogger<WebCamImageController> logger)
         {
             _webCamImageCaptureService = webCamImageCaptureService;
             _logger = logger;
-            _env = env;
         }
 
         [HttpGet]
@@ -93,7 +90,7 @@ namespace Docker.WebApi.Controllers
         {
             try
             {
-                _webCamImageCaptureService.SyncLocalWebCamImageData(_env.WebRootPath, data);
+                _webCamImageCaptureService.SyncLocalWebCamImageData(data);
 
                 var result = new ResultModel<WebCamImageQueryDTO>
                 {

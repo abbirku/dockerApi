@@ -47,10 +47,10 @@ namespace Docker.Infrastructure.Services
             return result;
         }
 
-        public bool SyncLocalWebCamImageData(string rootPath, WebCamImageInsertDTO imageData)
+        public async Task<bool> SyncLocalWebCamImageData(WebCamImageInsertDTO imageData)
         {
-            _apiUnitOfWork.WebCamImageRepository.SyncLocalWebCamImageData(rootPath, imageData);
-            _apiUnitOfWork.SaveChanges();
+            _apiUnitOfWork.WebCamImageRepository.SyncLocalWebCamImageData(imageData);
+            await _apiUnitOfWork.SaveChangesAsync();
             return true;
         }
 

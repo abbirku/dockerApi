@@ -88,6 +88,7 @@ namespace Docker.WebApi
             });
 
             webCamSeed.MigrateAsync().Wait();
+            webCamSeed.SeedAsync().Wait();
         }
     }
 }
