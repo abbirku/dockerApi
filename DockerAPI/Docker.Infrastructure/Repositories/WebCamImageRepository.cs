@@ -2,9 +2,7 @@
 using Docker.Infrastructure.Context;
 using Docker.Infrastructure.DTO;
 using Docker.Infrastructure.Entities;
-using Docker.Infrastructure.Services;
 using System;
-using System.Threading.Tasks;
 
 namespace Docker.Infrastructure.Repositories
 {
@@ -20,11 +18,14 @@ namespace Docker.Infrastructure.Repositories
             if (imageData.Image == null)
                 throw new ArgumentNullException("Provided image is null");
 
-            Add(new WebCamImage
+            if(Get(x=>x.ImageName.Equals(imageData.Image.ImageName)).Count == 0)
             {
-                CaptureTime = imageData.Image.CaptureTime,
-                ImageName = imageData.Image.ImageName
-            });
+                Add(new WebCamImage
+                {
+                    CaptureTime = imageData.Image.CaptureTime,
+                    ImageName = imageData.Image.ImageName
+                });
+            }
         }
     }
 
