@@ -4,17 +4,15 @@ using Docker.Infrastructure.DataModel;
 using Docker.Infrastructure.DTO;
 using Docker.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Serilog;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Docker.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = "CommonPolicy")]
+
     public class WebCamImageController : ControllerBase
     {
         private readonly ILogger<WebCamImageController> _logger;

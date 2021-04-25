@@ -1,17 +1,16 @@
 ﻿using Docker.Infrastructure.DataModel;
 using Docker.Infrastructure.DTO;
 using Docker.Infrastructure.SettingsModels;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Docker.WebApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Policy = "AdminPolicy")]
+
     public class SettingsController : ControllerBase
     {
         [HttpGet]
