@@ -6,6 +6,7 @@ using Docker.Infrastructure.Seed;
 using Docker.Infrastructure.SettingsModels;
 using Docker.Membership.Contexts;
 using Docker.Membership.Entities;
+using Docker.Membership.Seed;
 using Docker.Membership.Services;
 using Docker.Membership.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -142,7 +143,7 @@ namespace Docker.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebCamSeed webCamSeed)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebCamSeed webCamSeed, ApplicationUserSeed applicationUserSeed)
         {
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
@@ -170,6 +171,8 @@ namespace Docker.WebApi
 
             webCamSeed.MigrateAsync().Wait();
             webCamSeed.SeedAsync().Wait();
+            applicationUserSeed.MigrateAsync().Wait();
+            applicationUserSeed.SeedAsync().Wait();
         }
     }
 }

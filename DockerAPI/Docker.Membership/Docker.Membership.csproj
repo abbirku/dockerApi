@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Docker.Core\Docker.Core.csproj" />
+  </ItemGroup>
+
 </Project>

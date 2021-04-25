@@ -1,4 +1,5 @@
-﻿using Docker.Membership.Contexts;
+﻿using Docker.Core;
+using Docker.Membership.Contexts;
 using Docker.Membership.Entities;
 using Docker.Membership.Services;
 using Docker.Membership.Shared;
@@ -15,27 +16,26 @@ using System.Threading.Tasks;
 
 namespace Docker.Membership.Seed
 {
-    public interface IApplicationUserSeed
+    public class ApplicationUserSeed : DataSeed<ApplicationDbContext>
     {
-        public Task SeedRollAndAdminUserAsync();
-    }
-
-    public class ApplicationUserSeed : IApplicationUserSeed
-    {
-        private ApplicationDbContext _context;
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
 
-        public ApplicationUserSeed(ApplicationDbContext context, 
+        public ApplicationUserSeed(ApplicationDbContext context,
             ApplicationUserManager userManager,
             ApplicationRoleManager roleManager)
+            : base(context)
         {
-            _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
-        public async Task SeedRollAndAdminUserAsync()
+        public override async Task SeedAsync()
+        {
+            await SeedRollAndAdminUserAsync();
+        }
+
+        private async Task SeedRollAndAdminUserAsync()
         {
             try
             {
