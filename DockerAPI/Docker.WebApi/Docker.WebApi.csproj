@@ -58,5 +58,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Docker.Core\Docker.Core.csproj" />
     <ProjectReference Include="..\Docker.Infrastructure\Docker.Infrastructure.csproj" />
+    <ProjectReference Include="..\Docker.Membership\Docker.Membership.csproj" />
   </ItemGroup>
 </Project>
