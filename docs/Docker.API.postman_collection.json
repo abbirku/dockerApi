@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "4689114d-54ca-498f-b675-6ee7561ee1f2",
+		"name": "Docker.API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"wadud.ku@gmail.com\",\r\n    \"username\": \"wadud.ku\",\r\n    \"password\": \"wadud@19900909\",\r\n    \"confirmPassword\": \"wadud@19900909\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44360/api/account/register",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44360",
+					"path": [
+						"api",
+						"account",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"wadud.ku\",\r\n    \"password\": \"wadud@19900909\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44360/api/account/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44360",
+					"path": [
+						"api",
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WebCamImage",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVXNlciIsIlVzZXJJZCI6ImZjYmMxNzM5LWZmZmMtNDkxNy05ZDM3LTA4ZDkwODFiOTg3NyIsIm5iZiI6MTYxOTM3NjkxNSwiZXhwIjoxNjE5OTgxNzE1LCJpYXQiOjE2MTkzNzY5MTUsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjQ0MzYwIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNjAifQ.8TB9HGPoatVVX1xA0D-Obs_H3rfJIQAhOf4HsnpnAgQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44360/api/WebCamImage",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44360",
+					"path": [
+						"api",
+						"WebCamImage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Settings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVXNlciIsIlVzZXJJZCI6ImZjYmMxNzM5LWZmZmMtNDkxNy05ZDM3LTA4ZDkwODFiOTg3NyIsIm5iZiI6MTYxOTM3NjkxNSwiZXhwIjoxNjE5OTgxNzE1LCJpYXQiOjE2MTkzNzY5MTUsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjQ0MzYwIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNjAifQ.8TB9HGPoatVVX1xA0D-Obs_H3rfJIQAhOf4HsnpnAgQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44360/api/Settings",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44360",
+					"path": [
+						"api",
+						"Settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WebCamImage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"image\" : null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44360/api/WebCamImage",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44360",
+					"path": [
+						"api",
+						"WebCamImage"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
