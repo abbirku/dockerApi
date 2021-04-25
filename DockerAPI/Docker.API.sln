@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docker.Infrastructure", "Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docker.WebApi", "Docker.WebApi\Docker.WebApi.csproj", "{859FB0E6-F143-489D-92C2-2B32CB1F35DE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Docker.Membership", "Docker.Membership\Docker.Membership.csproj", "{FEEC1C37-5512-4134-9D23-FE173E491795}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{859FB0E6-F143-489D-92C2-2B32CB1F35DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{859FB0E6-F143-489D-92C2-2B32CB1F35DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{859FB0E6-F143-489D-92C2-2B32CB1F35DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEEC1C37-5512-4134-9D23-FE173E491795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEEC1C37-5512-4134-9D23-FE173E491795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEEC1C37-5512-4134-9D23-FE173E491795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEEC1C37-5512-4134-9D23-FE173E491795}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
