@@ -27,6 +27,8 @@
     <Compile Remove="Migrations\ApplicationDb\20210226111204_AddGuidGeneratorForApplicationUserAndRole.Designer.cs" />
     <Compile Remove="Migrations\ApplicationDb\20210307185306_KeyMouseEntity.cs" />
     <Compile Remove="Migrations\ApplicationDb\20210307185306_KeyMouseEntity.Designer.cs" />
+    <Compile Remove="Migrations\ApplicationDb\20210425170536_IdentityEntityMigration.cs" />
+    <Compile Remove="Migrations\ApplicationDb\20210425170536_IdentityEntityMigration.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
@@ -54,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logs\" />
+    <Folder Include="Migrations\ApplicationDb\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Docker.Core\Docker.Core.csproj" />
