@@ -4,6 +4,7 @@ using Docker.Infrastructure;
 using Docker.Infrastructure.Context;
 using Docker.Infrastructure.Seed;
 using Docker.Infrastructure.SettingsModels;
+using Docker.Membership;
 using Docker.Membership.Contexts;
 using Docker.Membership.Entities;
 using Docker.Membership.Seed;
@@ -51,7 +52,9 @@ namespace Docker.WebApi
             var connectionString = Configuration.GetConnectionString(connectionStringName);
             var migrationAssemblyName = typeof(Startup).Assembly.FullName;
 
-            builder.RegisterModule(new InfrastructureModule(connectionString, migrationAssemblyName));
+            builder
+                .RegisterModule(new InfrastructureModule(connectionString, migrationAssemblyName))
+                .RegisterModule(new MembershipModule(connectionString, migrationAssemblyName));
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -169,10 +172,18 @@ namespace Docker.WebApi
                 endpoints.MapControllers();
             });
 
-            webCamSeed.MigrateAsync().Wait();
-            webCamSeed.SeedAsync().Wait();
-            applicationUserSeed.MigrateAsync().Wait();
-            applicationUserSeed.SeedAsync().Wait();
+            try
+            {
+                webCamSeed.MigrateAsync().Wait();
+                webCamSeed.SeedAsync().Wait();
+                applicationUserSeed.MigrateAsync().Wait();
+                applicationUserSeed.SeedAsync().Wait();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

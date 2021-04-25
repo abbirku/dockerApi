@@ -32,6 +32,10 @@ namespace Docker.Membership
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>()
                 .SingleInstance();
 
+            //Register seeds
+            builder.RegisterType<ApplicationUserSeed>().AsSelf()
+                .InstancePerLifetimeScope();
+
             base.Load(builder);
         }
     }
