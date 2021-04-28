@@ -59,6 +59,8 @@ docker run -it -p 8000:80 {imagename}
    "docker volume create --driver local --opt type=none --opt device={Physical location of the file} --opt o=bind {volume name}"
 2. run the following command from context to bind the created volume and image
    "docker run -it -p 8000:80 -v {volume name}:/app/Logs {image name}"
+3. run the following command from context to bind the multiple virtual path with volume
+   "docker run -it -p 8000:80 -v {volume_name}:{virtual_path_1} -v {volume_name}:{virtual_path_2} -v {volume_name}:{virtual_path_3} {image_name}"
 	
 ## Docker compose
 1. To run docker compose use the following command: docker-compose up -d
