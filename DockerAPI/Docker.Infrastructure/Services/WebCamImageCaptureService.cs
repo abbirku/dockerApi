@@ -51,9 +51,17 @@ namespace Docker.Infrastructure.Services
 
         public async Task<bool> SyncLocalWebCamImageData(WebCamImageInsertDTO imageData)
         {
-            _apiUnitOfWork.WebCamImageRepository.SyncLocalWebCamImageData(imageData);
-            await _apiUnitOfWork.SaveChangesAsync();
-            return true;
+            try
+            {
+                _apiUnitOfWork.WebCamImageRepository.SyncLocalWebCamImageData(imageData);
+                await _apiUnitOfWork.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         public bool DeleteWebCamImageRecord(Guid id)
@@ -67,5 +75,7 @@ namespace Docker.Infrastructure.Services
             _apiUnitOfWork.SaveChanges();
             return true;
         }
+
+        public async Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData() => await _apiUnitOfWork.WebCamImageRepository.GetUserWebCamImageData();
     }
 }

@@ -11,5 +11,6 @@ namespace Docker.Infrastructure.Services
         WebCamImageQueryDTO GetWebCamImage(Guid id);
         Task<bool> SyncLocalWebCamImageData(WebCamImageInsertDTO imageData);
         bool DeleteWebCamImageRecord(Guid id);
+        Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData();
     }
 }

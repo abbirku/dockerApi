@@ -15,4 +15,14 @@ namespace Docker.Infrastructure.DTO
         public string ImageName { get; set; }
         public DateTime CaptureTime { get; set; }
     }
+
+    public class UserWebCamImageQueryDTO
+    {
+        public Guid UserId { get; set; }
+        public Guid WebCamImageId { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string ImageName { get; set; }
+        public DateTime CaptureTime { get; set; }
+    }
 }
