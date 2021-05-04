@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using System.Data.Common;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Reflection;
 
 namespace Docker.Core
 {
@@ -14,6 +20,7 @@ namespace Docker.Core
     {
         protected TContext _dbContext;
         protected DbSet<TEntity> _dbSet;
+        protected int CommandTimeout { get; set; }
 
         public Repository(TContext context)
         {
@@ -247,6 +254,229 @@ namespace Docker.Core
                 else
                     return query.ToList();
             }
+        }
+
+        protected virtual async Task<TReturn> ExecuteScalarAsync<TReturn>(string storedProcedureName, IDictionary<string, object> parameters = null)
+        {
+            DbCommand command = CreateCommand(storedProcedureName, parameters);
+            bool connectionOpened = false;
+            if (command.Connection.State == ConnectionState.Closed)
+            {
+                await command.Connection.OpenAsync();
+                connectionOpened = true;
+            }
+            TReturn result;
+            try
+            {
+                result = await ExecuteScalarAsync<TReturn>(command);
+            }
+            finally
+            {
+                if (connectionOpened)
+                    await command.Connection.CloseAsync();
+            }
+
+            return result;
+        }
+
+        protected virtual IDictionary<string, object> ExecuteStoredProcedure(string storedProcedureName, IDictionary<string, object> parameters = null, IDictionary<string, Type> outParameters = null)
+        {
+            var dbNull = ConvertNullToDbNull(CreateCommand(storedProcedureName, parameters, outParameters));
+            bool flag = false;
+            if (dbNull.Connection.State == ConnectionState.Closed)
+            {
+                dbNull.Connection.Open();
+                flag = true;
+            }
+            try
+            {
+                dbNull.ExecuteNonQuery();
+            }
+            finally
+            {
+                if (flag)
+                    dbNull.Connection.Close();
+            }
+            return CopyOutParams(dbNull, outParameters);
+        }
+
+        protected virtual async Task<IDictionary<string, object>> ExecuteStoredProcedureAsync(string storedProcedureName, IDictionary<string, object> parameters = null, IDictionary<string, Type> outParameters = null)
+        {
+            var command = CreateCommand(storedProcedureName, parameters, outParameters);
+            command = ConvertNullToDbNull(command);
+            bool connectionOpened = false;
+
+            if (command.Connection.State == ConnectionState.Closed)
+            {
+                await command.Connection.OpenAsync();
+                connectionOpened = true;
+            }
+            try
+            {
+                int num = await command.ExecuteNonQueryAsync();
+            }
+            finally
+            {
+                if (connectionOpened)
+                    await command.Connection.CloseAsync();
+            }
+            
+            var dictionary = this.CopyOutParams(command, outParameters);
+            
+            return dictionary;
+        }
+
+        protected virtual async Task<(IList<TReturn> result, IDictionary<string, object> outValues)> QueryWithStoredProcedureAsync<TReturn>(string storedProcedureName,IDictionary<string, object> parameters = null,IDictionary<string, Type> outParameters = null)
+            where TReturn : class, new()
+        {
+            var command = this.CreateCommand(storedProcedureName, parameters, outParameters);
+            bool connectionOpened = false;
+
+            if (command.Connection.State == ConnectionState.Closed)
+            {
+                await command.Connection.OpenAsync();
+                connectionOpened = true;
+            }
+            IList<TReturn> result = null;
+            try
+            {
+                result = await ExecuteQueryAsync<TReturn>(command);
+            }
+            finally
+            {
+                if (connectionOpened)
+                    await command.Connection.CloseAsync();
+            }
+
+            (IList<TReturn>, IDictionary<string, object>) valueTuple = (result, CopyOutParams(command, outParameters));
+            return valueTuple;
+        }
+
+        private DbCommand CreateCommand( string storedProcedureName, IDictionary<string, object> parameters = null, IDictionary<string, Type> outParameters = null)
+        {
+            DbCommand command = _dbContext.Database.GetDbConnection().CreateCommand();
+            command.CommandText = storedProcedureName;
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandTimeout = CommandTimeout;
+            if (parameters != null)
+            {
+                foreach (KeyValuePair<string, object> parameter in parameters)
+                    command.Parameters.Add((object)CreateParameter(parameter.Key, parameter.Value));
+            }
+            if (outParameters != null)
+            {
+                foreach (KeyValuePair<string, Type> outParameter in outParameters)
+                    command.Parameters.Add((object)CreateOutputParameter(outParameter.Key, outParameter.Value));
+            }
+            return command;
+        }
+
+        private DbParameter CreateParameter(string name, object value) => (DbParameter)new SqlParameter(name, CorrectSqlDateTime(value));
+
+        private DbParameter CreateOutputParameter(string name, DbType dbType)
+        {
+            SqlParameter sqlParameter = new SqlParameter(name, CorrectSqlDateTime((object)dbType));
+            sqlParameter.Direction = ParameterDirection.Output;
+            return sqlParameter;
+        }
+
+        private DbParameter CreateOutputParameter(string name, Type type)
+        {
+            SqlParameter sqlParameter = new SqlParameter(name, GetDbTypeFromType(type));
+            sqlParameter.Direction = ParameterDirection.Output;
+            return sqlParameter;
+        }
+
+        private SqlDbType GetDbTypeFromType(Type type)
+        {
+            if (type == typeof(int) || type == typeof(uint) || (type == typeof(short) || type == typeof(ushort)))
+                return SqlDbType.Int;
+            if (type == typeof(long) || type == typeof(ulong))
+                return SqlDbType.BigInt;
+            if (type == typeof(double) || type == typeof(Decimal))
+                return SqlDbType.Decimal;
+            if (type == typeof(string))
+                return SqlDbType.NVarChar;
+            if (type == typeof(DateTime))
+                return SqlDbType.DateTime;
+            if (type == typeof(bool))
+                return SqlDbType.Bit;
+            if (type == typeof(Guid))
+                return SqlDbType.UniqueIdentifier;
+            int num = type == typeof(char) ? 1 : 0;
+            return SqlDbType.NVarChar;
+        }
+
+        private object ChangeType(Type propertyType, object itemValue)
+        {
+            switch (itemValue)
+            {
+                case DBNull _:
+                    return null;
+                case Decimal _:
+                    if (propertyType == typeof(double))
+                        return Convert.ToDouble(itemValue);
+                    break;
+            }
+            return itemValue;
+        }
+
+        private object CorrectSqlDateTime(object parameterValue) => parameterValue != null && parameterValue.GetType().Name == "DateTime" && Convert.ToDateTime(parameterValue) < SqlDateTime.MinValue.Value ? (object)SqlDateTime.MinValue.Value : parameterValue;
+
+        private async Task<IList<TReturn>> ExecuteQueryAsync<TReturn>(DbCommand command)
+        {
+            var reader = await command.ExecuteReaderAsync();
+            var result = new List<TReturn>();
+            while (true)
+            {
+                if (await reader.ReadAsync())
+                {
+                    Type type = typeof(TReturn);
+                    object obj = type.GetConstructor(new Type[0]).Invoke(new object[0]);
+                    for (int ordinal = 0; ordinal < reader.FieldCount; ++ordinal)
+                    {
+                        PropertyInfo property = type.GetProperty(reader.GetName(ordinal));
+                        property.SetValue(obj, ChangeType(property.PropertyType, reader.GetValue(ordinal)));
+                    }
+                    result.Add((TReturn)obj);
+                }
+                else
+                    break;
+            }
+            return result;
+        }
+
+        private async Task<TReturn> ExecuteScalarAsync<TReturn>(DbCommand command)
+        {
+            command = ConvertNullToDbNull(command);
+            if (command.Connection.State != ConnectionState.Open)
+                command.Connection.Open();
+            object obj = await command.ExecuteScalarAsync();
+            return obj != DBNull.Value ? (TReturn)obj : default(TReturn);
+        }
+
+        private DbCommand ConvertNullToDbNull(DbCommand command)
+        {
+            for (int index = 0; index < command.Parameters.Count; ++index)
+            {
+                if (command.Parameters[index].Value == null)
+                    command.Parameters[index].Value = DBNull.Value;
+            }
+            return command;
+        }
+
+        private IDictionary<string, object> CopyOutParams(
+          DbCommand command,
+          IDictionary<string, Type> outParameters)
+        {
+            Dictionary<string, object> dictionary = null;
+            if (outParameters != null)
+            {
+                dictionary = new Dictionary<string, object>();
+                foreach (KeyValuePair<string, Type> outParameter in outParameters)
+                    dictionary.Add(outParameter.Key, command.Parameters[outParameter.Key].Value);
+            }
+            return dictionary;
         }
     }
 }
