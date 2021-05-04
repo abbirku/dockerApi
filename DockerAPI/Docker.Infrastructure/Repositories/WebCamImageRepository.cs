@@ -22,6 +22,7 @@ namespace Docker.Infrastructure.Repositories
             {
                 Add(new WebCamImage
                 {
+                    UserId = imageData.Image.UserId,
                     CaptureTime = imageData.Image.CaptureTime,
                     ImageName = imageData.Image.ImageName
                 });

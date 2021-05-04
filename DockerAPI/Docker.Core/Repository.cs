@@ -329,7 +329,7 @@ namespace Docker.Core
         protected virtual async Task<(IList<TReturn> result, IDictionary<string, object> outValues)> QueryWithStoredProcedureAsync<TReturn>(string storedProcedureName,IDictionary<string, object> parameters = null,IDictionary<string, Type> outParameters = null)
             where TReturn : class, new()
         {
-            var command = this.CreateCommand(storedProcedureName, parameters, outParameters);
+            var command = CreateCommand(storedProcedureName, parameters, outParameters);
             bool connectionOpened = false;
 
             if (command.Connection.State == ConnectionState.Closed)
