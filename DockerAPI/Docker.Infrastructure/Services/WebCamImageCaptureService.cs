@@ -23,6 +23,7 @@ namespace Docker.Infrastructure.Services
             var result = data.Select(x => new WebCamImageQueryDTO
             {
                 Id = x.Id,
+                UserId = x.UserId,
                 CaptureTime = x.CaptureTime,
                 ImageName = x.ImageName
             });
@@ -40,6 +41,7 @@ namespace Docker.Infrastructure.Services
             var result = new WebCamImageQueryDTO
             {
                 Id = data.Id,
+                UserId = data.UserId,
                 CaptureTime = data.CaptureTime,
                 ImageName = data.ImageName
             };
@@ -65,5 +67,8 @@ namespace Docker.Infrastructure.Services
             _apiUnitOfWork.SaveChanges();
             return true;
         }
+
+        public async Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData() => 
+            await _apiUnitOfWork.WebCamImageRepository.GetUserWebCamImageData();
     }
 }

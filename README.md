@@ -23,6 +23,14 @@ Set the following keys in windows 10 environment variables with sutable values
 3. In StartUp.cs in Configure method inject that seed class.
 4. At the end of Configure method do MigrateAsync.
 
+## Stored Procedure
+In this boilerplate, we have used *_Stored Procedure_*. *_id_* of *_User_* Entity is used in *_WebCamImage_* Entity as foreign key. Now to gather *_User_* information along with *_WebCamImage_* data, a *_Stored Procedure_* named **_GetUserWebCamImages_** is created under **_Docker.DbBackup_** project. After running this *_Stored Procedure_* in *_Sql Server_*, you can use **_QueryWithStoredProcedureAsync_** to execute the *_SP_* which will return the queried data. To observe the process please follow **_GetUserWebCamImages_** Endpoint and its dependency.
+
+**Notes:** Some repository method to execute the *_Stored Procedure_*.
+1. ExecuteScalarAsync
+2. ExecuteStoredProcedure
+3. ExecuteStoredProcedureAsync
+
 ## To build docker image run the following command:
 docker build -t {imagename} -f {folder}/Dockerfile .
 

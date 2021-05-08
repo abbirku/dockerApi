@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Docker.Infrastructure.DataModel;
 using Docker.Infrastructure.DTO;
 using Docker.Infrastructure.Services;
@@ -54,6 +55,35 @@ namespace Docker.WebApi.Controllers
             }
         }
 
+        [HttpGet("GetUserWebCamImages")]
+        public async Task<IActionResult> GetUserWebCamImages()
+        {
+            try
+            {
+                var result = new ResultModel<IEnumerable<UserWebCamImageQueryDTO>>
+                {
+                    Data = await _webCamImageCaptureService.GetUserWebCamImageData(),
+                    Message = string.Empty,
+                    Success = true
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError(ex.Message);
+
+                var result = new ResultModel<IEnumerable<UserWebCamImageQueryDTO>>
+                {
+                    Data = new List<UserWebCamImageQueryDTO>(),
+                    Message = ex.Message,
+                    Success = false
+                };
+
+                return BadRequest(result);
+            }
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
@@ -84,11 +114,11 @@ namespace Docker.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(WebCamImageInsertDTO data)
+        public async Task<IActionResult> Post(WebCamImageInsertDTO data)
         {
             try
             {
-                _webCamImageCaptureService.SyncLocalWebCamImageData(data);
+                await _webCamImageCaptureService.SyncLocalWebCamImageData(data);
 
                 var result = new ResultModel<WebCamImageQueryDTO>
                 {

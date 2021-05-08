@@ -3,6 +3,8 @@ using Docker.Infrastructure.Context;
 using Docker.Infrastructure.DTO;
 using Docker.Infrastructure.Entities;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Docker.Infrastructure.Repositories
 {
@@ -13,6 +15,13 @@ namespace Docker.Infrastructure.Repositories
             : base(dbContext)
         {}
 
+        public async Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData()
+        {
+            var result = await QueryWithStoredProcedureAsync<UserWebCamImageQueryDTO>("GetUserWebCamImages", null, null);
+
+            return result.result;
+        }
+
         public void SyncLocalWebCamImageData(WebCamImageInsertDTO imageData)
         {
             if (imageData.Image == null)
@@ -22,6 +31,7 @@ namespace Docker.Infrastructure.Repositories
             {
                 Add(new WebCamImage
                 {
+                    UserId = imageData.Image.UserId,
                     CaptureTime = imageData.Image.CaptureTime,
                     ImageName = imageData.Image.ImageName
                 });
