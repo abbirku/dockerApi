@@ -24,16 +24,16 @@ namespace Docker.Infrastructure.Repositories
 
         public void SyncLocalWebCamImageData(WebCamImageInsertDTO imageData)
         {
-            if (imageData.Image == null)
+            if (imageData == null)
                 throw new ArgumentNullException("Provided image is null");
 
-            if(Get(x=>x.ImageName.Equals(imageData.Image.ImageName)).Count == 0)
+            if(Get(x=>x.ImageName.Equals(imageData.ImageName)).Count == 0)
             {
                 Add(new WebCamImage
                 {
-                    UserId = imageData.Image.UserId,
-                    CaptureTime = imageData.Image.CaptureTime,
-                    ImageName = imageData.Image.ImageName
+                    UserId = imageData.UserId,
+                    CaptureTime = imageData.CaptureTime,
+                    ImageName = imageData.ImageName
                 });
             }
         }
