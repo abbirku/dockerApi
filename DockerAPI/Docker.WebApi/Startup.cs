@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Docker.Infrastructure;
 using Docker.Infrastructure.Context;
+using Docker.Infrastructure.MappingProfiles;
 using Docker.Infrastructure.Seed;
 using Docker.Infrastructure.SettingsModels;
 using Docker.Membership;
@@ -139,6 +140,9 @@ namespace Docker.WebApi
                     policy.RequireRole(Config.Admin, Config.User);
                 });
             });
+
+            //Automapper
+            services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddCors();
             services.AddMvc();

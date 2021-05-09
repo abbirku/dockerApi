@@ -11,6 +11,11 @@ namespace Docker.Infrastructure.DTO
         public string Image { get; set; }
     }
 
+    public class WebCamImageUpdateDTO : WebCamImageInsertDTO
+    {
+        public Guid Id { get; set; }
+    }
+
     public class WebCamImageQueryDTO
     {
         public Guid Id { get; set; }
