@@ -21,7 +21,16 @@ namespace Docker.Infrastructure.Seed
         {
             var webCamList = await BuildWebCamImageList();
             foreach (var item in webCamList)
-                await _webCamImageCaptureService.SyncLocalWebCamImageData(item);
+            {
+                try
+                {
+                    var data = _webCamImageCaptureService.GetWebCamImageByName(item.ImageName);
+                }
+                catch (Exception)
+                {
+                    await _webCamImageCaptureService.SyncLocalWebCamImageData(item);
+                }
+            }
         }
 
         private async Task<List<WebCamImageInsertDTO>> BuildWebCamImageList()
@@ -30,11 +39,11 @@ namespace Docker.Infrastructure.Seed
             {
                 var webCamImageList = new List<WebCamImageInsertDTO>()
                 {
-                    new WebCamImageInsertDTO{ Image = new WebCamImageModel { ImageName="Image1", CaptureTime = DateTime.Now } },
-                    new WebCamImageInsertDTO{ Image = new WebCamImageModel { ImageName="Image2", CaptureTime = DateTime.Now } },
-                    new WebCamImageInsertDTO{ Image = new WebCamImageModel { ImageName="Image3", CaptureTime = DateTime.Now } },
-                    new WebCamImageInsertDTO{ Image = new WebCamImageModel { ImageName="Image4", CaptureTime = DateTime.Now } },
-                    new WebCamImageInsertDTO{ Image = new WebCamImageModel { ImageName="Image5", CaptureTime = DateTime.Now } },
+                    new WebCamImageInsertDTO{ ImageName="Image1", CaptureTime = DateTime.Now },
+                    new WebCamImageInsertDTO{ ImageName="Image2", CaptureTime = DateTime.Now },
+                    new WebCamImageInsertDTO{ ImageName="Image3", CaptureTime = DateTime.Now },
+                    new WebCamImageInsertDTO{ ImageName="Image4", CaptureTime = DateTime.Now },
+                    new WebCamImageInsertDTO{ ImageName="Image5", CaptureTime = DateTime.Now },
                 };
 
                 return webCamImageList;

@@ -144,11 +144,39 @@ namespace Docker.WebApi.Controllers
             }
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult Put(Guid id, [FromBody] WebCamImageUpdatetDTO value)
-        //{
-        //    return Ok();
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(Guid id, [FromBody] WebCamImageUpdateDTO data)
+        {
+            try
+            {
+                if (_webCamImageCaptureService.GetWebCamImage(id) == null)
+                    throw new InvalidOperationException($"No webcam image data available for id: {id}");
+
+                await _webCamImageCaptureService.UpdateLocalWebCamImageData(data);
+
+                var result = new ResultModel<WebCamImageQueryDTO>
+                {
+                    Data = null,
+                    Message = "Update successful",
+                    Success = true
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                var result = new ResultModel<WebCamImageQueryDTO>
+                {
+                    Data = new WebCamImageQueryDTO(),
+                    Message = "Error Occurred",
+                    Success = false
+                };
+
+                return BadRequest(result);
+            }
+        }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)

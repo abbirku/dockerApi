@@ -31,6 +31,31 @@ In this boilerplate, we have used *_Stored Procedure_*. *_id_* of *_User_* Entit
 2. ExecuteStoredProcedure
 3. ExecuteStoredProcedureAsync
 
+## AutoMapper
+To use **AutoMapper** use the following nuget packages in infrastructure and WebApi
+project.
+```
+//AutoMapper
+AutoMapper.Extensions.Microsoft.DependencyInjection
+```
+Register models mapping in profile like following in **Infrastructure** project
+```cs
+#region Web Cam Image
+CreateMap<WebCamImageInsertDTO, WebCamImage>();
+CreateMap<WebCamImageUpdateDTO, WebCamImage>();
+CreateMap<WebCamImage, WebCamImageQueryDTO>();
+#endregion
+```
+Register **AutoMapper** for a profile at **ConfigureServices** in **Startup.cs**
+```cs
+//Automapper
+services.AddAutoMapper(typeof(MappingProfile));
+```
+Inject **_IMapper_** in **_Service_** or **_Repository_** and Map data between two models like below
+```cs
+var result = _mapper.Map<IList<WebCamImage>, IList<WebCamImageQueryDTO>>(data);
+```
+
 ## To build docker image run the following command:
 docker build -t {imagename} -f {folder}/Dockerfile .
 

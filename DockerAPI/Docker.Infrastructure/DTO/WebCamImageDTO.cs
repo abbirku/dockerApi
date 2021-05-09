@@ -1,11 +1,22 @@
-﻿using Docker.Infrastructure.DataModel;
-using System;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Docker.Infrastructure.DTO
 {
     public class WebCamImageInsertDTO
     {
-        public WebCamImageModel Image { get; set; }
+        [Required]
+        public Guid UserId { get; set; }
+        [Required]
+        public string ImageName { get; set; }
+        public DateTime CaptureTime { get; set; }
+        public string Image { get; set; }
+    }
+
+    public class WebCamImageUpdateDTO : WebCamImageInsertDTO
+    {
+        [Required]
+        public Guid Id { get; set; }
     }
 
     public class WebCamImageQueryDTO
@@ -13,6 +24,7 @@ namespace Docker.Infrastructure.DTO
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string ImageName { get; set; }
+        public string Image { get; set; }
         public DateTime CaptureTime { get; set; }
     }
 

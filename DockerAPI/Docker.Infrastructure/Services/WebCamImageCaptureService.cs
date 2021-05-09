@@ -4,29 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Docker.Infrastructure.Entities;
 
 namespace Docker.Infrastructure.Services
 {
     public class WebCamImageCaptureService : IWebCamImageCaptureService
     {
         private readonly IApiUnitOfWork _apiUnitOfWork;
+        private readonly IMapper _mapper;
 
-        public WebCamImageCaptureService(IApiUnitOfWork apiUnitOfWork)
+        public WebCamImageCaptureService(IApiUnitOfWork apiUnitOfWork, IMapper mapper)
         {
             _apiUnitOfWork = apiUnitOfWork;
+            _mapper = mapper;
         }
 
-        public IEnumerable<WebCamImageQueryDTO> GetWebCamImages()
+        public IList<WebCamImageQueryDTO> GetWebCamImages()
         {
             var data = _apiUnitOfWork.WebCamImageRepository.GetAll();
 
-            var result = data.Select(x => new WebCamImageQueryDTO
-            {
-                Id = x.Id,
-                UserId = x.UserId,
-                CaptureTime = x.CaptureTime,
-                ImageName = x.ImageName
-            });
+            var result = _mapper.Map<IList<WebCamImage>, IList<WebCamImageQueryDTO>>(data);
 
             return result;
         }
@@ -38,13 +36,7 @@ namespace Docker.Infrastructure.Services
             if (data == null)
                 throw new InvalidOperationException($"No data found with id: {id}");
 
-            var result = new WebCamImageQueryDTO
-            {
-                Id = data.Id,
-                UserId = data.UserId,
-                CaptureTime = data.CaptureTime,
-                ImageName = data.ImageName
-            };
+            var result = _mapper.Map<WebCamImage, WebCamImageQueryDTO>(data); ;
 
             return result;
         }
@@ -65,10 +57,32 @@ namespace Docker.Infrastructure.Services
 
             _apiUnitOfWork.WebCamImageRepository.Remove(data);
             _apiUnitOfWork.SaveChanges();
+
             return true;
         }
 
         public async Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData() => 
             await _apiUnitOfWork.WebCamImageRepository.GetUserWebCamImageData();
+
+        public WebCamImageQueryDTO GetWebCamImageByName(string imageName)
+        {
+            var data = _apiUnitOfWork.WebCamImageRepository
+                .Get(x=>x.ImageName.ToLower().Equals(imageName.ToLower()))
+                .FirstOrDefault();
+
+            if (data == null)
+                throw new InvalidOperationException($"No data found with name: {imageName}");
+
+            var result = _mapper.Map<WebCamImage, WebCamImageQueryDTO>(data); ;
+
+            return result;
+        }
+
+        public async Task<bool> UpdateLocalWebCamImageData(WebCamImageUpdateDTO imageData)
+        {
+            _apiUnitOfWork.WebCamImageRepository.UpdateWebCamImageData(imageData);
+            await _apiUnitOfWork.SaveChangesAsync();
+            return true;
+        }
     }
 }

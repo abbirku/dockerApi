@@ -12,6 +12,7 @@ namespace Docker.Infrastructure.Repositories
     public interface IWebCamImageRepository : IRepository<WebCamImage, Guid, ApiContext>
     {
         void SyncLocalWebCamImageData(WebCamImageInsertDTO imageData);
+        void UpdateWebCamImageData(WebCamImageUpdateDTO imageData);
         Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData();
     }
 }
