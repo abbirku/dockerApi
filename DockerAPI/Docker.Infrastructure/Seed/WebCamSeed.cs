@@ -21,7 +21,16 @@ namespace Docker.Infrastructure.Seed
         {
             var webCamList = await BuildWebCamImageList();
             foreach (var item in webCamList)
-                await _webCamImageCaptureService.SyncLocalWebCamImageData(item);
+            {
+                try
+                {
+                    var data = _webCamImageCaptureService.GetWebCamImageByName(item.ImageName);
+                }
+                catch (Exception)
+                {
+                    await _webCamImageCaptureService.SyncLocalWebCamImageData(item);
+                }
+            }
         }
 
         private async Task<List<WebCamImageInsertDTO>> BuildWebCamImageList()

@@ -176,18 +176,10 @@ namespace Docker.WebApi
                 endpoints.MapControllers();
             });
 
-            try
-            {
-                webCamSeed.MigrateAsync().Wait();
-                webCamSeed.SeedAsync().Wait();
-                applicationUserSeed.MigrateAsync().Wait();
-                applicationUserSeed.SeedAsync().Wait();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            applicationUserSeed.MigrateAsync().Wait();
+            applicationUserSeed.SeedAsync().Wait();
+            webCamSeed.MigrateAsync().Wait();
+            webCamSeed.SeedAsync().Wait();
         }
     }
 }

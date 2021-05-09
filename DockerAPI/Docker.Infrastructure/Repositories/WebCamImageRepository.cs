@@ -1,4 +1,5 @@
-﻿using Docker.Core;
+﻿using AutoMapper;
+using Docker.Core;
 using Docker.Infrastructure.Context;
 using Docker.Infrastructure.DTO;
 using Docker.Infrastructure.Entities;
@@ -10,10 +11,10 @@ namespace Docker.Infrastructure.Repositories
 {
     public class WebCamImageRepository : Repository<WebCamImage, Guid, ApiContext>, IWebCamImageRepository
     {
+        private readonly IMapper _mapper;
 
-        public WebCamImageRepository(ApiContext dbContext)
-            : base(dbContext)
-        {}
+        public WebCamImageRepository(ApiContext dbContext, IMapper mapper)
+            : base(dbContext) => _mapper = mapper;
 
         public async Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData()
         {
@@ -27,15 +28,27 @@ namespace Docker.Infrastructure.Repositories
             if (imageData == null)
                 throw new ArgumentNullException("Provided image is null");
 
-            if(Get(x=>x.ImageName.Equals(imageData.ImageName)).Count == 0)
+            if (Get(x => x.ImageName.ToLower().Equals(imageData.ImageName.ToLower())).Count == 0)
             {
-                Add(new WebCamImage
-                {
-                    UserId = imageData.UserId,
-                    CaptureTime = imageData.CaptureTime,
-                    ImageName = imageData.ImageName
-                });
+                var webCamImageData = _mapper.Map<WebCamImageInsertDTO, WebCamImage>(imageData);
+                Add(webCamImageData);
             }
+            else
+                throw new InvalidOperationException("Can not insert duplicate image name");
+        }
+
+        public void UpdateWebCamImageData(WebCamImageUpdateDTO imageData)
+        {
+            if (imageData == null)
+                throw new ArgumentNullException("Provided image is null");
+
+            if (GetById(imageData.Id) != null)
+            {
+                var webCamImageData = _mapper.Map<WebCamImageUpdateDTO, WebCamImage>(imageData);
+                Edit(webCamImageData);
+            }
+            else
+                throw new InvalidOperationException($"No data exists with Id: {imageData.Id}");
         }
     }
 

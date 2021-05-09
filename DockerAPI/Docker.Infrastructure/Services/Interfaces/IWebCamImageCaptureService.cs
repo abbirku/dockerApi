@@ -7,9 +7,11 @@ namespace Docker.Infrastructure.Services
 {
     public interface IWebCamImageCaptureService
     {
-        IEnumerable<WebCamImageQueryDTO> GetWebCamImages();
+        IList<WebCamImageQueryDTO> GetWebCamImages();
         WebCamImageQueryDTO GetWebCamImage(Guid id);
+        WebCamImageQueryDTO GetWebCamImageByName(string imageName);
         Task<bool> SyncLocalWebCamImageData(WebCamImageInsertDTO imageData);
+        Task<bool> UpdateLocalWebCamImageData(WebCamImageUpdateDTO imageData);
         bool DeleteWebCamImageRecord(Guid id);
         Task<IList<UserWebCamImageQueryDTO>> GetUserWebCamImageData();
     }
