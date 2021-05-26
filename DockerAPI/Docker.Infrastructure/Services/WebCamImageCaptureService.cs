@@ -24,6 +24,9 @@ namespace Docker.Infrastructure.Services
         {
             var data = _apiUnitOfWork.WebCamImageRepository.GetAll();
 
+            if (data == null)
+                throw new InvalidOperationException("No data found in Webcam Image Table.");
+
             var result = _mapper.Map<IList<WebCamImage>, IList<WebCamImageQueryDTO>>(data);
 
             return result;
@@ -43,6 +46,9 @@ namespace Docker.Infrastructure.Services
 
         public async Task<bool> SyncLocalWebCamImageData(WebCamImageInsertDTO imageData)
         {
+            if (imageData == null)
+                throw new InvalidOperationException("Provided image data is null");
+
             _apiUnitOfWork.WebCamImageRepository.SyncLocalWebCamImageData(imageData);
             await _apiUnitOfWork.SaveChangesAsync();
             return true;

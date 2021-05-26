@@ -10,7 +10,6 @@ namespace Docker.Infrastructure.DTO
         [Required]
         public string ImageName { get; set; }
         public DateTime CaptureTime { get; set; }
-        public string Image { get; set; }
     }
 
     public class WebCamImageUpdateDTO : WebCamImageInsertDTO
@@ -24,7 +23,6 @@ namespace Docker.Infrastructure.DTO
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string ImageName { get; set; }
-        public string Image { get; set; }
         public DateTime CaptureTime { get; set; }
     }
 
