@@ -23,3 +23,6 @@
 /DockerAPI/Docker.WebApi/wwwroot/Images/CaptureScreen
 /DockerAPI/Docker.Membership/bin/Debug/netcoreapp3.1
 /DockerAPI/Docker.Membership/obj
+/DockerAPI/Docker.Infrastructure.Test/bin/Debug/netcoreapp3.1
+/DockerAPI/Docker.Infrastructure.Test/obj/Debug/netcoreapp3.1
+/DockerAPI/Docker.Infrastructure.Test/obj
