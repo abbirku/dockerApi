@@ -18,15 +18,15 @@ namespace Docker.Core
         where TContext : DbContext
     {
         #region Get Method Signature Collection
-        IList<TEntity> Get();
+        IQueryable<TEntity> Get(); //Done
 
-        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter);
+        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter); //Done
 
-        IList<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
+        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "", bool isTrackingOff = false);
+            string includeProperties = "", bool isTrackingOff = false); //Done
 
-        (IList<TEntity> data, int total, int totalDisplay) Get(
+        Pagination<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "", int pageIndex = 1, int pageSize = 10, bool isTrackingOff = false);
@@ -41,7 +41,7 @@ namespace Docker.Core
             string includeProperties = "", int pageIndex = 1, int pageSize = 10, bool isTrackingOff = false);
 
         TEntity GetById(TKey id);
-        
+
         int GetCount(Expression<Func<TEntity, bool>> filter = null);
         #endregion
 
@@ -76,11 +76,8 @@ namespace Docker.Core
         }
 
         #region Get Method Collection
-        public virtual IList<TEntity> Get()
-        {
-            IQueryable<TEntity> query = _dbSet;
-            return query.ToList();
-        }
+        public virtual IQueryable<TEntity> Get()
+            => _dbSet.AsQueryable();
 
         public virtual IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter)
         {
@@ -94,16 +91,14 @@ namespace Docker.Core
             return query;
         }
 
-        public virtual IList<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
+        public virtual IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "", bool isTrackingOff = false)
         {
             IQueryable<TEntity> query = _dbSet;
 
             if (filter != null)
-            {
                 query = query.Where(filter);
-            }
 
             foreach (var includeProperty in includeProperties.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -116,33 +111,29 @@ namespace Docker.Core
                 var result = orderBy(query);
 
                 if (isTrackingOff)
-                    return result.AsNoTracking().ToList();
+                    return result.AsNoTracking();
                 else
-                    return result.ToList();
+                    return result;
             }
             else
             {
                 if (isTrackingOff)
-                    return query.AsNoTracking().ToList();
+                    return query.AsNoTracking();
                 else
-                    return query.ToList();
+                    return query;
             }
         }
 
-        public virtual (IList<TEntity> data, int total, int totalDisplay) Get(
+        public virtual Pagination<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "", int pageIndex = 1, int pageSize = 10, bool isTrackingOff = false)
         {
+            var result = new Pagination<TEntity>();
             IQueryable<TEntity> query = _dbSet;
-            var total = query.Count();
-            var totalDisplay = query.Count();
 
             if (filter != null)
-            {
                 query = query.Where(filter);
-                totalDisplay = query.Count();
-            }
 
             foreach (var includeProperty in includeProperties.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -150,22 +141,21 @@ namespace Docker.Core
                 query = query.Include(includeProperty);
             }
 
+            IQueryable<TEntity> paginatedQuery;
+
             if (orderBy != null)
-            {
-                var result = orderBy(query).Skip((pageIndex - 1) * pageSize).Take(pageSize);
-                if (isTrackingOff)
-                    return (result.AsNoTracking().ToList(), total, totalDisplay);
-                else
-                    return (result.ToList(), total, totalDisplay);
-            }
+                paginatedQuery = orderBy(query).Skip((pageIndex - 1) * pageSize).Take(pageSize);
             else
-            {
-                var result = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
-                if (isTrackingOff)
-                    return (result.AsNoTracking().ToList(), total, totalDisplay);
-                else
-                    return (result.ToList(), total, totalDisplay);
-            }
+                paginatedQuery = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+
+            if (isTrackingOff)
+                paginatedQuery = paginatedQuery.AsNoTracking();
+
+            result.Data = paginatedQuery;
+            result.Count = query.Count();
+            result.Pageconfig = new PageConfig(query.Count(), pageIndex, pageSize);
+
+            return result;
         }
 
         public virtual IList<TEntity> GetDynamic(Expression<Func<TEntity, bool>> filter = null,
@@ -175,9 +165,7 @@ namespace Docker.Core
             IQueryable<TEntity> query = _dbSet;
 
             if (filter != null)
-            {
                 query = query.Where(filter);
-            }
 
             foreach (var includeProperty in includeProperties.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
