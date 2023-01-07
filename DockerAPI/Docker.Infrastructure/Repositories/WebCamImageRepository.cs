@@ -31,7 +31,7 @@ namespace Docker.Infrastructure.Repositories
             if (Get(x => x.ImageName.ToLower().Equals(imageData.ImageName.ToLower())).Count == 0)
             {
                 var webCamImageData = _mapper.Map<WebCamImageInsertDTO, WebCamImage>(imageData);
-                Add(webCamImageData);
+                Insert(webCamImageData);
             }
             else
                 throw new InvalidOperationException("Can not insert duplicate image name");
@@ -45,7 +45,7 @@ namespace Docker.Infrastructure.Repositories
             if (GetById(imageData.Id) != null)
             {
                 var webCamImageData = _mapper.Map<WebCamImageUpdateDTO, WebCamImage>(imageData);
-                Edit(webCamImageData);
+                Update(webCamImageData);
             }
             else
                 throw new InvalidOperationException($"No data exists with Id: {imageData.Id}");

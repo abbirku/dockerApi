@@ -17,32 +17,47 @@ namespace Docker.Core
         where TEntity : class, IEntity<TKey>
         where TContext : DbContext
     {
-        void Add(TEntity entity);
-        void Remove(TKey id);
-        void Remove(TEntity entityToDelete);
-        void Remove(Expression<Func<TEntity, bool>> filter);
-        void Edit(TEntity entityToUpdate);
-        int GetCount(Expression<Func<TEntity, bool>> filter = null);
-        IList<TEntity> Get(Expression<Func<TEntity, bool>> filter);
-        IList<TEntity> GetAll();
-        TEntity GetById(TKey id);
+        #region Get Method Signature Collection
+        IList<TEntity> Get();
+
+        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter);
+
+        IList<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "", bool isTrackingOff = false);
+
         (IList<TEntity> data, int total, int totalDisplay) Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "", int pageIndex = 1, int pageSize = 10, bool isTrackingOff = false);
+
+        IList<TEntity> GetDynamic(Expression<Func<TEntity, bool>> filter = null,
+            string orderBy = null,
+            string includeProperties = "", bool isTrackingOff = false);
 
         (IList<TEntity> data, int total, int totalDisplay) GetDynamic(
             Expression<Func<TEntity, bool>> filter = null,
             string orderBy = null,
             string includeProperties = "", int pageIndex = 1, int pageSize = 10, bool isTrackingOff = false);
 
-        IList<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "", bool isTrackingOff = false);
+        TEntity GetById(TKey id);
+        
+        int GetCount(Expression<Func<TEntity, bool>> filter = null);
+        #endregion
 
-        IList<TEntity> GetDynamic(Expression<Func<TEntity, bool>> filter = null,
-            string orderBy = null,
-            string includeProperties = "", bool isTrackingOff = false);
+        #region Insert Method Signature Collection
+        void Insert(TEntity entity);
+        #endregion
+
+        #region Update Method Signature Collection
+        void Update(TEntity entityToUpdate);
+        #endregion
+
+        #region Delete Method Signature Collection
+        void Delete(TKey id);
+        void Delete(TEntity entityToDelete);
+        void Delete(Expression<Func<TEntity, bool>> filter);
+        #endregion
     }
 
     public abstract class Repository<TEntity, TKey, TContext>
@@ -60,64 +75,14 @@ namespace Docker.Core
             _dbSet = _dbContext.Set<TEntity>();
         }
 
-        public virtual void Add(TEntity entity)
-        {
-            _dbSet.Add(entity);
-        }
-
-        public virtual void Remove(TKey id)
-        {
-            var entityToDelete = _dbSet.Find(id);
-            Remove(entityToDelete);
-        }
-
-        public virtual void Remove(TEntity entityToDelete)
-        {
-            if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _dbSet.Attach(entityToDelete);
-            }
-            _dbSet.Remove(entityToDelete);
-        }
-
-        public virtual void Remove(Expression<Func<TEntity, bool>> filter)
-        {
-            _dbSet.RemoveRange(_dbSet.Where(filter));
-        }
-
-        public virtual void Edit(TEntity entityToUpdate)
-        {
-            //Find the tracking object in local cache
-            var local = _dbSet.Local.FirstOrDefault(e => e.Id.Equals(entityToUpdate.Id));
-
-            // check if local is not null 
-            if (local != null) {
-                //Then detach
-                _dbContext.Entry(local).State = EntityState.Detached;
-            }
-
-            // set Modified flag in your entry
-            _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
-
-            //_dbSet.Attach(entityToUpdate);
-            //_dbContext.Entry(entityToUpdate).State = EntityState.Modified;
-        }
-
-        public virtual int GetCount(Expression<Func<TEntity, bool>> filter = null)
+        #region Get Method Collection
+        public virtual IList<TEntity> Get()
         {
             IQueryable<TEntity> query = _dbSet;
-            var count = 0;
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            count = query.Count();
-            return count;
+            return query.ToList();
         }
 
-        public virtual IList<TEntity> Get(Expression<Func<TEntity, bool>> filter)
+        public virtual IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> filter)
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -126,18 +91,42 @@ namespace Docker.Core
                 query = query.Where(filter);
             }
 
-            return query.ToList();
+            return query;
         }
 
-        public virtual IList<TEntity> GetAll()
+        public virtual IList<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeProperties = "", bool isTrackingOff = false)
         {
             IQueryable<TEntity> query = _dbSet;
-            return query.ToList();
-        }
 
-        public virtual TEntity GetById(TKey id)
-        {
-            return _dbSet.Find(id);
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                var result = orderBy(query);
+
+                if (isTrackingOff)
+                    return result.AsNoTracking().ToList();
+                else
+                    return result.ToList();
+            }
+            else
+            {
+                if (isTrackingOff)
+                    return query.AsNoTracking().ToList();
+                else
+                    return query.ToList();
+            }
         }
 
         public virtual (IList<TEntity> data, int total, int totalDisplay) Get(
@@ -179,10 +168,45 @@ namespace Docker.Core
             }
         }
 
-        public virtual (IList<TEntity> data, int total, int totalDisplay) GetDynamic(
-            Expression<Func<TEntity, bool>> filter = null,
+        public virtual IList<TEntity> GetDynamic(Expression<Func<TEntity, bool>> filter = null,
             string orderBy = null,
-            string includeProperties = "", int pageIndex = 1, int pageSize = 10, bool isTrackingOff = false)
+            string includeProperties = "", bool isTrackingOff = false)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                var result = query.OrderBy(orderBy);
+
+                if (isTrackingOff)
+                    return result.AsNoTracking().ToList();
+                else
+                    return result.ToList();
+            }
+            else
+            {
+                if (isTrackingOff)
+                    return query.AsNoTracking().ToList();
+                else
+                    return query.ToList();
+            }
+        }
+
+        public virtual (IList<TEntity> data, int total, int totalDisplay) GetDynamic(
+           Expression<Func<TEntity, bool>> filter = null,
+           string orderBy = null,
+           string includeProperties = "", int pageIndex = 1, int pageSize = 10, bool isTrackingOff = false)
         {
             IQueryable<TEntity> query = _dbSet;
             var total = query.Count();
@@ -218,75 +242,82 @@ namespace Docker.Core
             }
         }
 
-        public virtual IList<TEntity> Get(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "", bool isTrackingOff = false)
+        public virtual int GetCount(Expression<Func<TEntity, bool>> filter = null)
         {
             IQueryable<TEntity> query = _dbSet;
+            var count = 0;
 
             if (filter != null)
             {
                 query = query.Where(filter);
             }
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
-
-            if (orderBy != null)
-            {
-                var result = orderBy(query);
-
-                if (isTrackingOff)
-                    return result.AsNoTracking().ToList();
-                else
-                    return result.ToList();
-            }
-            else
-            {
-                if (isTrackingOff)
-                    return query.AsNoTracking().ToList();
-                else
-                    return query.ToList();
-            }
+            count = query.Count();
+            return count;
         }
 
-        public virtual IList<TEntity> GetDynamic(Expression<Func<TEntity, bool>> filter = null,
-            string orderBy = null,
-            string includeProperties = "", bool isTrackingOff = false)
+        public virtual TEntity GetById(TKey id)
         {
-            IQueryable<TEntity> query = _dbSet;
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProperty);
-            }
-
-            if (orderBy != null)
-            {
-                var result = query.OrderBy(orderBy);
-
-                if (isTrackingOff)
-                    return result.AsNoTracking().ToList();
-                else
-                    return result.ToList();
-            }
-            else
-            {
-                if (isTrackingOff)
-                    return query.AsNoTracking().ToList();
-                else
-                    return query.ToList();
-            }
+            return _dbSet.Find(id);
         }
+        #endregion
+
+        #region Insert Method Signature Collection
+        public virtual void Insert(TEntity entity)
+        {
+            _dbSet.Add(entity);
+        }
+        #endregion
+
+        #region Update Method Signature Collection
+        public virtual void Update(TEntity entityToUpdate)
+        {
+            //Find the tracking object in local cache
+            var local = _dbSet.Local.FirstOrDefault(e => e.Id.Equals(entityToUpdate.Id));
+
+            // check if local is not null 
+            if (local != null)
+            {
+                //Then detach
+                _dbContext.Entry(local).State = EntityState.Detached;
+            }
+
+            // set Modified flag in your entry
+            _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
+
+            //_dbSet.Attach(entityToUpdate);
+            //_dbContext.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+        #endregion
+
+        #region Delete Method Signature Collection
+        public virtual void Delete(TKey id)
+        {
+            var entityToDelete = _dbSet.Find(id);
+            Delete(entityToDelete);
+        }
+
+        public virtual void Delete(TEntity entityToDelete)
+        {
+            if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                _dbSet.Attach(entityToDelete);
+            }
+            _dbSet.Remove(entityToDelete);
+        }
+
+        public virtual void Delete(Expression<Func<TEntity, bool>> filter)
+        {
+            _dbSet.RemoveRange(_dbSet.Where(filter));
+        }
+        #endregion
+
+
+
+
+
+
+
 
         protected virtual async Task<TReturn> ExecuteScalarAsync<TReturn>(string storedProcedureName, IDictionary<string, object> parameters = null)
         {
@@ -352,13 +383,13 @@ namespace Docker.Core
                 if (connectionOpened)
                     await command.Connection.CloseAsync();
             }
-            
+
             var dictionary = this.CopyOutParams(command, outParameters);
-            
+
             return dictionary;
         }
 
-        protected virtual async Task<(IList<TReturn> result, IDictionary<string, object> outValues)> QueryWithStoredProcedureAsync<TReturn>(string storedProcedureName,IDictionary<string, object> parameters = null,IDictionary<string, Type> outParameters = null)
+        protected virtual async Task<(IList<TReturn> result, IDictionary<string, object> outValues)> QueryWithStoredProcedureAsync<TReturn>(string storedProcedureName, IDictionary<string, object> parameters = null, IDictionary<string, Type> outParameters = null)
             where TReturn : class, new()
         {
             var command = CreateCommand(storedProcedureName, parameters, outParameters);
@@ -384,7 +415,7 @@ namespace Docker.Core
             return valueTuple;
         }
 
-        private DbCommand CreateCommand( string storedProcedureName, IDictionary<string, object> parameters = null, IDictionary<string, Type> outParameters = null)
+        private DbCommand CreateCommand(string storedProcedureName, IDictionary<string, object> parameters = null, IDictionary<string, Type> outParameters = null)
         {
             DbCommand command = _dbContext.Database.GetDbConnection().CreateCommand();
             command.CommandText = storedProcedureName;

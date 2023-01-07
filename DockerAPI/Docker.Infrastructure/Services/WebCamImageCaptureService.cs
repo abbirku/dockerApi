@@ -22,7 +22,7 @@ namespace Docker.Infrastructure.Services
 
         public IList<WebCamImageQueryDTO> GetWebCamImages()
         {
-            var data = _apiUnitOfWork.WebCamImageRepository.GetAll();
+            var data = _apiUnitOfWork.WebCamImageRepository.Get();
 
             var result = _mapper.Map<IList<WebCamImage>, IList<WebCamImageQueryDTO>>(data);
 
@@ -55,7 +55,7 @@ namespace Docker.Infrastructure.Services
             if (data == null)
                 throw new InvalidOperationException($"No data found with id: {id}");
 
-            _apiUnitOfWork.WebCamImageRepository.Remove(data);
+            _apiUnitOfWork.WebCamImageRepository.Delete(data);
             _apiUnitOfWork.SaveChanges();
 
             return true;
